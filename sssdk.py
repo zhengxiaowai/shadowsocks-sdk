@@ -5,7 +5,7 @@ import socket
 import json
 from contextlib import contextmanager
 
-socket.timeout(3)
+socket.settimeout(3)
 
 
 def create_sf_socket(sockfile):
