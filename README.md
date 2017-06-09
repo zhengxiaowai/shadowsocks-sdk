@@ -1,6 +1,10 @@
 # shadowsocks-sdk
 the sdk canhelp you to manage your shadowsocks sever
 
+if you want to use shadowsocks-sdk, the shadowsocks server must run on manager mode.
+
+reference: [shadocsocks wiki](https://github.com/shadowsocks/shadowsocks/wiki/Manage-Multiple-Users)
+
 # Usage
 
 - sdk usage
