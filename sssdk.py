@@ -5,25 +5,27 @@ import socket
 import json
 from contextlib import contextmanager
 
-socket.settimeout(3)
+TIME_OUT_SEC = 3
 
 
 def create_sf_socket(sockfile):
     sock = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
+    sock.settimeout(TIME_OUT_SEC)
     sock.connect(sockfile)
     return sock
 
 
 def create_hp_socket(host, port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock.settimeout(TIME_OUT_SEC)
     sock.connect((host, int(port)))
     return sock
 
 
 @contextmanager
 def udp_socket(host=None, port=None, sockfile=None):
-    sock = create_sf_socket(
-        sockfile) if sockfile else create_hp_socket(host, port)
+    sock = create_sf_socket(sockfile) \
+        if sockfile else create_hp_socket(host, port)
     try:
         yield sock
     finally:
@@ -44,14 +46,14 @@ class TransferProtocol(object):
     @staticmethod
     def add(json_data):
         return TransferProtocol.template.format(
-                command='add',
-                json=json.dumps(json_data))
+            command='add',
+            json=json.dumps(json_data))
 
     @staticmethod
     def remove(json_data):
         return TransferProtocol.template.format(
-                command='remove',
-                json=json.dumps(json_data))
+            command='remove',
+            json=json.dumps(json_data))
 
 
 class ShadowsocksSDK(object):
@@ -90,7 +92,3 @@ class ShadowsocksSDK(object):
             sock.send(TransferProtocol.remove(json_data))
             if self._response(sock).strip() != 'ok':
                 raise ShadowsocksSDKError('remove user error')
-
-
-if __name__ == '__main__':
-    pass
