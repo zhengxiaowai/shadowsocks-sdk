@@ -10,6 +10,7 @@ __version__ = '0.1.0dev'
 TIME_OUT_SEC = 3
 BINARY_FORMAT = 'utf8'
 
+
 def create_sf_socket(sockfile):
     sock = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
     sock.settimeout(TIME_OUT_SEC)

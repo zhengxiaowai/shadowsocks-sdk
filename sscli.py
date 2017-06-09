@@ -37,7 +37,7 @@ def cli_remove(args):
     print('Successfully remove users.')
 
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser(add_help=False)
 
     #: main command arguments
@@ -115,3 +115,7 @@ if __name__ == '__main__':
         print('user cancel.')
     except socket.timeout:
         print('Timeout, try again.')
+
+
+if __name__ == '__main__':
+    main()
