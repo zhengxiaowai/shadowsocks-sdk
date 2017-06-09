@@ -5,6 +5,8 @@ import socket
 import json
 from contextlib import contextmanager
 
+__version__ = '0.1.0dev'
+
 TIME_OUT_SEC = 3
 
 

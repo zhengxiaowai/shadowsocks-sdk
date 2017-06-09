@@ -4,9 +4,7 @@
 import socket
 import argparse
 
-from sssdk import ShadowsocksSDK
-
-__version__ = '0.1.0dev'
+from sssdk import ShadowsocksSDK, __version__
 
 
 def get_version():
