@@ -113,3 +113,5 @@ if __name__ == '__main__':
         args.func(args)
     except KeyboardInterrupt:
         print('user cancel.')
+    except socket.timeout:
+        print('Timeout, try again.')

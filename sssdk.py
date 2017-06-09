@@ -8,7 +8,7 @@ from contextlib import contextmanager
 __version__ = '0.1.0dev'
 
 TIME_OUT_SEC = 3
-
+BINARY_FORMAT = 'utf8'
 
 def create_sf_socket(sockfile):
     sock = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
@@ -39,23 +39,25 @@ class ShadowsocksSDKError(Exception):
 
 
 class TransferProtocol(object):
-    template = b'{command}: {json}'
+    template = '{command}: {json}'
 
     @staticmethod
     def ping():
-        return b'ping'
+        return str('ping').encode(BINARY_FORMAT)
 
     @staticmethod
     def add(json_data):
-        return TransferProtocol.template.format(
+        text = TransferProtocol.template.format(
             command='add',
             json=json.dumps(json_data))
+        return text.encode(BINARY_FORMAT)
 
     @staticmethod
     def remove(json_data):
-        return TransferProtocol.template.format(
+        text = TransferProtocol.template.format(
             command='remove',
             json=json.dumps(json_data))
+        return text.encode(BINARY_FORMAT)
 
 
 class ShadowsocksSDK(object):
@@ -72,7 +74,8 @@ class ShadowsocksSDK(object):
         status = False
         with udp_socket(*self.args) as sock:
             sock.send(TransferProtocol.ping())
-            if self._response(sock).strip() == 'pong':
+            resp_text = self._response(sock).strip()
+            if resp_text.decode(BINARY_FORMAT) == 'pong':
                 status = True
         return status
 
@@ -83,7 +86,8 @@ class ShadowsocksSDK(object):
                 'password': password
             }
             sock.send(TransferProtocol.add(json_data))
-            if self._response(sock).strip() != 'ok':
+            resp_text = self._response(sock).strip()
+            if resp_text.decode(BINARY_FORMAT) != 'ok':
                 raise ShadowsocksSDKError('add user error')
 
     def remove_user(self, port):
@@ -92,5 +96,6 @@ class ShadowsocksSDK(object):
                 'server_port': int(port)
             }
             sock.send(TransferProtocol.remove(json_data))
-            if self._response(sock).strip() != 'ok':
+            resp_text = self._response(sock).strip()
+            if resp_text.decode(BINARY_FORMAT) != 'ok':
                 raise ShadowsocksSDKError('remove user error')
